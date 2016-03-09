@@ -47258,6 +47258,9 @@ module.exports = AuthorPage;
 "use strict";
 
 var React = require('react');
+// using react-router's link capability to dynamically create link hrefs
+var Router = require('react-router');
+var Link = Router.Link;
 
 // creates a common, reusable header component
 var Header = React.createClass({displayName: "Header",
@@ -47267,11 +47270,11 @@ var Header = React.createClass({displayName: "Header",
           React.createElement("div", {className: "container-fluid"}, 
             React.createElement("ul", {className: "nav navbar-nav"}, 
               React.createElement("li", null, 
-                React.createElement("a", {href: "/"}, React.createElement("img", {src: "images/dice.png"}))
+                React.createElement(Link, {to: "app"}, React.createElement("img", {src: "images/dice.png"}))
               ), 
-              React.createElement("li", null, React.createElement("a", {href: "/"}, "Home")), 
-              React.createElement("li", null, React.createElement("a", {href: "/#about"}, "About")), 
-              React.createElement("li", null, React.createElement("a", {href: "/#authors"}, "Authors"))
+              React.createElement("li", null, React.createElement(Link, {to: "app"}, "Home")), 
+              React.createElement("li", null, React.createElement(Link, {to: "about"}, "About")), 
+              React.createElement("li", null, React.createElement(Link, {to: "authors"}, "Authors"))
             )
           )
         )
@@ -47280,11 +47283,13 @@ var Header = React.createClass({displayName: "Header",
 });
 
 module.exports = Header;
-},{"react":197}],205:[function(require,module,exports){
+},{"react":197,"react-router":28}],205:[function(require,module,exports){
 "use strict";
 
 // import react lib for using react
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
 
 // uses React.createClass(), which returns a child object
 // with an arbitrarily deep structure
@@ -47296,7 +47301,8 @@ var Home = React.createClass({displayName: "Home",
         React.createElement("div", {className: "jumbotron"}, 
           React.createElement("h1", null, "Administration Homepage"), 
           React.createElement("p", null, "A React/React-Router/Flux based administration homepage to manage things."), 
-          React.createElement("p", null, React.createElement("h3", null, "Use the options below to get started."))
+          React.createElement("p", null, React.createElement("h3", null, "Use the options below to get started.")), 
+          React.createElement(Link, {to: "about", className: "btn btn-primary btn-large"}, "Learn more")
         )
     );
   }
@@ -47304,7 +47310,7 @@ var Home = React.createClass({displayName: "Home",
 
 // export the react component using the commonJS pattern
 module.exports = Home;
-},{"react":197}],206:[function(require,module,exports){
+},{"react":197,"react-router":28}],206:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
