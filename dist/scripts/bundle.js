@@ -47350,6 +47350,8 @@ var Router = require('react-router');
 var DefaultRoute = Router.DefaultRoute;
 var Route = Router.Route;
 var NotFoundRoute = Router.NotFoundRoute;
+// levering react-router's redirect for bad reference handling
+var Redirect = Router.Redirect;
 
 // define initial routes which nest underneath the main 'app' route
 var routes = (
@@ -47357,6 +47359,10 @@ var routes = (
     React.createElement(DefaultRoute, {handler: require('./components/homePage')}), 
     React.createElement(Route, {name: "authors", handler: require('./components/authors/authorPage')}), 
     React.createElement(Route, {name: "about", handler: require('./components/about/aboutPage')}), 
+    React.createElement(Redirect, {from: "/illustrators", to: "authors"}), 
+    React.createElement(Redirect, {from: "about-us", to: "about"}), 
+    React.createElement(Redirect, {from: "authurs", to: "authors"}), 
+    React.createElement(Redirect, {from: "about/*", to: "about"}), 
     React.createElement(NotFoundRoute, {handler: require('./components/notFoundPage')})
   )
 );
