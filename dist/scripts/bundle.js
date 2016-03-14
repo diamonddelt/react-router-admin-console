@@ -47338,7 +47338,8 @@ var routes = require('./routes');
 
 // use React Router to handle routing based on routes variable
 // defined in routes.js
-Router.run(routes, function(Handler) {
+// uses optional HTML5 'push-state' History URLs parameter in Router.run()
+Router.run(routes, Router.HistoryLocation, function(Handler) {
   React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
 },{"./routes":208,"react":197,"react-router":28}],208:[function(require,module,exports){
