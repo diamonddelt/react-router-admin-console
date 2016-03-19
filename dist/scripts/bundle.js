@@ -47181,7 +47181,48 @@ var App = React.createClass({displayName: "App",
 });
 
 module.exports = App;
-},{"./common/header.js":205,"jquery":2,"react":197,"react-router":28}],202:[function(require,module,exports){
+},{"./common/header.js":206,"jquery":2,"react":197,"react-router":28}],202:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+
+var AuthorForm = React.createClass({displayName: "AuthorForm",
+  render: function() {
+    return (
+      React.createElement("div", null, 
+        React.createElement("form", null, 
+          React.createElement("label", {htmlFor: "firstName"}, "First Name"), 
+          React.createElement("input", {type: "text", 
+            name: "firstName", 
+            className: "form-control", 
+            placeholder: "First Name", 
+            ref: "firstName", 
+            onChange: this.props.onChange}
+            /* TODO: Figure out why these two statements break rendering */
+            /* value={this.props.author.firstName} */ ), 
+          React.createElement("br", null), 
+
+          "console.log(", this.props.author.firstName, ");", 
+
+          React.createElement("label", {htmlFor: "lastName"}, "Last Name"), 
+          React.createElement("input", {type: "text", 
+            name: "lastName", 
+            className: "form-control", 
+            placeholder: "Last Name", 
+            ref: "lastName", 
+            onChange: this.props.onChange}
+            /* value={this.props.author.lastName} */ ), 
+          React.createElement("br", null), 
+
+          React.createElement("input", {type: "submit", value: "Save", className: "btn btn-default"})
+        )
+      )
+    );
+  }
+});
+
+module.exports = AuthorForm;
+},{"react":197}],203:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -47221,7 +47262,7 @@ propTypes: {
 });
 
 module.exports = AuthorList;
-},{"react":197}],203:[function(require,module,exports){
+},{"react":197}],204:[function(require,module,exports){
 "use strict";
 
 // require react module for view rendering
@@ -47257,21 +47298,67 @@ var AuthorPage = React.createClass({displayName: "AuthorPage",
 });
 
 module.exports = AuthorPage;
-},{"../../api/authorApi.js":198,"./authorList.js":202,"react":197,"react-router":28}],204:[function(require,module,exports){
+},{"../../api/authorApi.js":198,"./authorList.js":203,"react":197,"react-router":28}],205:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
+var AuthorForm = require('./authorForm');
 
+// this top level component will handle the complex logic for the form,
+// while the child component in react should handle just displaying the markup
+// in a controller-view
 var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
+
+
+
+
+  // getInitialState is needed to allow the child component to
+  // be able to handle user data input
+  // this will show up in the child component's 'props' property
+  getInitialState: function() {
+    return {
+      author: { id: '', firstName: '', lastName: ''}
+    };
+  },
+
+  // an event handler which handles user input on a field within the child
+  // in this case, setting the value of the user input text to the author object
+  // and then passing that down into the child component
+  // this function is called on every single key-press
+  setAuthorState: function(event) {
+    var field = event.target.name;
+    var value = event.target.value;
+    this.state.author[field] = value;
+    return this.setState({author: this.state.author});
+  },
+
   render: function() {
     return (
-      React.createElement("h1", null, "Manage An Author")
+      React.createElement("div", null, 
+        React.createElement("h1", null, "Manage An Author"), 
+        React.createElement(AuthorForm, {
+          author: this.state.author, 
+          onChange: this.setAuthorState})
+      )
     );
   }
+
+
+/*
+  render: function() {
+    return (
+      <div>
+        <h1>Manage An Author</h1>
+        <AuthorForm />
+      </div>
+    );
+  }
+
+*/
 });
 
 module.exports = ManageAuthorPage;
-},{"react":197}],205:[function(require,module,exports){
+},{"./authorForm":202,"react":197}],206:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -47300,7 +47387,7 @@ var Header = React.createClass({displayName: "Header",
 });
 
 module.exports = Header;
-},{"react":197,"react-router":28}],206:[function(require,module,exports){
+},{"react":197,"react-router":28}],207:[function(require,module,exports){
 "use strict";
 
 // import react lib for using react
@@ -47327,7 +47414,7 @@ var Home = React.createClass({displayName: "Home",
 
 // export the react component using the commonJS pattern
 module.exports = Home;
-},{"react":197,"react-router":28}],207:[function(require,module,exports){
+},{"react":197,"react-router":28}],208:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -47346,7 +47433,7 @@ var NotFoundPage = React.createClass({displayName: "NotFoundPage",
 });
 
 module.exports = NotFoundPage;
-},{"react":197,"react-router":28}],208:[function(require,module,exports){
+},{"react":197,"react-router":28}],209:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -47356,10 +47443,10 @@ var routes = require('./routes');
 // use React Router to handle routing based on routes variable
 // defined in routes.js
 // uses optional HTML5 'push-state' History URLs parameter in Router.run()
-Router.run(routes, Router.HistoryLocation, function(Handler) {
+Router.run(routes, function(Handler) {
   React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
-},{"./routes":209,"react":197,"react-router":28}],209:[function(require,module,exports){
+},{"./routes":210,"react":197,"react-router":28}],210:[function(require,module,exports){
 "use strict";
 
 // React Router for handling app routing
@@ -47387,4 +47474,4 @@ var routes = (
 );
 
 module.exports = routes;
-},{"./components/about/aboutPage":200,"./components/app.js":201,"./components/authors/authorPage":203,"./components/authors/manageAuthorPage":204,"./components/homePage":206,"./components/notFoundPage":207,"react":197,"react-router":28}]},{},[208]);
+},{"./components/about/aboutPage":200,"./components/app.js":201,"./components/authors/authorPage":204,"./components/authors/manageAuthorPage":205,"./components/homePage":207,"./components/notFoundPage":208,"react":197,"react-router":28}]},{},[209]);
