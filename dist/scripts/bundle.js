@@ -47204,7 +47204,8 @@ var AuthorForm = React.createClass({displayName: "AuthorForm",
               value: this.props.author.lastName, 
               onChange: this.props.onChange}), 
 
-          React.createElement("input", {type: "submit", value: "Save", className: "btn btn-default"})
+          React.createElement("input", {type: "submit", value: "Save", className: "btn btn-default", 
+            onClick: this.props.onSave})
         )
       )
     );
@@ -47292,15 +47293,18 @@ module.exports = AuthorPage;
 "use strict";
 
 var React = require('react');
+var Router = require('react-router');
 var AuthorForm = require('./authorForm');
+var AuthorApi = require('../../api/authorApi');
 
 // this top level component will handle the complex logic for the form,
 // while the child component in react should handle just displaying the markup
 // in a controller-view
 var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
-
-
-
+  // utilize react-router mixin for navigation to handle the save button redirect
+  mixins: [
+    Router.Navigation
+  ],
 
   // getInitialState is needed to allow the child component to
   // be able to handle user data input
@@ -47322,13 +47326,25 @@ var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
     return this.setState({author: this.state.author});
   },
 
+  // passing an event from the child component to this component
+  // to use the 'Save' button, which just utilizes the 'mock' authorAPI
+  // to simulate saving to a database
+  saveAuthor: function(event) {
+    // jquery function to prevent the default action of the event parameter
+    event.preventDefault();
+    AuthorApi.saveAuthor(this.state.author);
+    // use the mixin to transition to the authors page
+    this.transitionTo('authors');
+  },
+
   render: function() {
     return (
       React.createElement("div", null, 
         React.createElement("h1", null, "Manage An Author"), 
         React.createElement(AuthorForm, {
           author: this.state.author, 
-          onChange: this.setAuthorState})
+          onChange: this.setAuthorState, 
+          onSave: this.saveAuthor})
       )
     );
   }
@@ -47348,7 +47364,7 @@ var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
 });
 
 module.exports = ManageAuthorPage;
-},{"./authorForm":202,"react":197}],206:[function(require,module,exports){
+},{"../../api/authorApi":198,"./authorForm":202,"react":197,"react-router":28}],206:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
