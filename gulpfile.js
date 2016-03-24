@@ -19,7 +19,8 @@ var config = {
     // specifies a glob for the bootstrap css files in node_modules
     css: [
       'node_modules/bootstrap/dist/css/bootstrap.min.css',
-      'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
+      'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
+      'node_modules/toastr/toastr.css'
     ],
     // specifies a glob for all js files in any subdir under /src
     js: './src/**/*.js',
