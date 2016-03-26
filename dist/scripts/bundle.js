@@ -47604,7 +47604,8 @@ module.exports = AuthorForm;
 "use strict";
 
 var React = require('react');
-
+var Router = require('react-router');
+var Link = Router.Link;
 var AuthorList = React.createClass({displayName: "AuthorList",
 
 // define debug prop types for the child component that must be present
@@ -47617,7 +47618,7 @@ propTypes: {
     var createAuthorRow = function(author) {
       return (
         React.createElement("tr", {key: author.id}, 
-          React.createElement("td", null, React.createElement("a", {href: "/#authors/" + author.id}, author.id)), 
+          React.createElement("td", null, React.createElement(Link, {to: "manageAuthor", params: {id: author.id}}, author.id)), 
           React.createElement("td", null, author.firstName, " ", author.lastName)
       )
       );
@@ -47640,7 +47641,7 @@ propTypes: {
 });
 
 module.exports = AuthorList;
-},{"react":197}],205:[function(require,module,exports){
+},{"react":197,"react-router":28}],205:[function(require,module,exports){
 "use strict";
 
 // require react module for view rendering
@@ -47694,13 +47695,32 @@ var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
     Router.Navigation
   ],
 
+  statics: {
+    willTransitionFrom: function(transition, component) {
+      // check if form data has been entered by user
+      if (component.state.dirty && !confirm('Leave without saving?')) {
+        transition.abort();
+      }
+    }
+  },
+
   // getInitialState is needed to allow the child component to
   // be able to handle user data input
   // this will show up in the child component's 'props' property
   getInitialState: function() {
     return {
-      author: { id: '', firstName: '', lastName: ''}
+      author: { id: '', firstName: '', lastName: ''},
+      errors: {},
+      dirty: false
     };
+  },
+
+  componentWillMount: function() {
+    var authorId = this.props.params.id; // from the path 'author/:id'
+
+    if (authorId) {
+      this.setState({author: AuthorApi.getAuthorById(authorId)});
+    }
   },
 
   // an event handler which handles user input on a field within the child
@@ -47708,6 +47728,8 @@ var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
   // and then passing that down into the child component
   // this function is called on every single key-press
   setAuthorState: function(event) {
+    // set the author form state as dirty
+    this.setState({dirty: true});
     var field = event.target.name;
     var value = event.target.value;
     this.state.author[field] = value;
@@ -47721,6 +47743,8 @@ var ManageAuthorPage = React.createClass({displayName: "ManageAuthorPage",
     // jquery function to prevent the default action of the event parameter
     event.preventDefault();
     AuthorApi.saveAuthor(this.state.author);
+    // set the state of the form back to 'clean'
+    this.setState({dirty: false});
     // use the toastr library to display a success message after saving
     toastr.success(this.state.author.firstName +
       " " + this.state.author.lastName +
@@ -47910,6 +47934,7 @@ var routes = (
     React.createElement(DefaultRoute, {handler: require('./components/homePage')}), 
     React.createElement(Route, {name: "authors", handler: require('./components/authors/authorPage')}), 
     React.createElement(Route, {name: "addAuthor", path: "author", handler: require('./components/authors/manageAuthorPage')}), 
+      React.createElement(Route, {name: "manageAuthor", path: "author/:id", handler: require('./components/authors/manageAuthorPage')}), 
     React.createElement(Route, {name: "about", handler: require('./components/about/aboutPage')}), 
     React.createElement(Redirect, {from: "/illustrators", to: "authors"}), 
     React.createElement(Redirect, {from: "about-us", to: "about"}), 
